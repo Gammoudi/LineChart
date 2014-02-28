@@ -12,6 +12,8 @@ import org.jfree.chart.ChartColor;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.axis.NumberTickUnit;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
@@ -24,7 +26,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 public class ReadExcel{
-    public static void main(String[]args){
+    public void readXlsFile(){
         short a=0;
         short b=1;
         short c=2;
@@ -35,9 +37,9 @@ public class ReadExcel{
         String filename ="/home/nagui/Bureau/test.xlsx";
         XYSeries plf_old_data = new XYSeries("PLF 4.0.4");
         XYSeries plf_new_data = new XYSeries("PLF 4.0.5");
-        XYSeries plf_one_sec = new XYSeries("one sec");
-        XYSeries plf_two_sec = new XYSeries("one sec");
-        XYSeries plf_three_sec = new XYSeries("one sec");
+        XYSeries plf_one_sec = new XYSeries("1 sec");
+        XYSeries plf_two_sec = new XYSeries("2 sec");
+        XYSeries plf_three_sec = new XYSeries("3 sec");
         if(filename != null && !filename.equals("")){
             try{
                 FileInputStream fs =new FileInputStream(filename);
@@ -68,8 +70,13 @@ public class ReadExcel{
             }
 
         }
+        CreateLineChart(plf_old_data, plf_new_data, plf_one_sec, plf_two_sec, plf_three_sec);
 
-        /* Add all XYSeries to XYSeriesCollection */
+
+    }
+
+    private void CreateLineChart(XYSeries plf_old_data, XYSeries plf_new_data, XYSeries plf_one_sec, XYSeries plf_two_sec, XYSeries plf_three_sec) {
+    /* Add all XYSeries to XYSeriesCollection */
         //XYSeriesCollection implements XYDataset
         XYSeriesCollection my_data_series= new XYSeriesCollection();
 
@@ -78,18 +85,20 @@ public class ReadExcel{
         my_data_series.addSeries(plf_three_sec);
         my_data_series.addSeries(plf_old_data);
         my_data_series.addSeries(plf_new_data);
-        JFreeChart chart = ChartFactory.createXYLineChart("Intranet Home Page - Response Time (Tomcat)", "Concurrent VUs", "Throughout(rq/s)", my_data_series,
-                PlotOrientation.VERTICAL,true, true, false);
+        JFreeChart chart = ChartFactory.createXYLineChart("Intranet Home Page - Response Time (Tomcat)", "Concurrent VUs", "Response Time(s)", my_data_series,
+                PlotOrientation.VERTICAL, true, true, false);
 
         XYPlot plot = chart.getXYPlot();
         plot.setBackgroundPaint(Color.WHITE);
         plot.setDomainGridlinesVisible(true);
         plot.setDomainGridlinePaint(Color.BLACK);
-
+        // Create an NumberAxis
+        NumberAxis xAxis = new NumberAxis();
+        xAxis.setTickUnit(new NumberTickUnit(100));
+        plot.setDomainAxis(100,xAxis);
         plot.setRangeGridlinesVisible(true);
         plot.setRangeGridlinePaint(Color.BLACK);
         XYLineAndShapeRenderer r = (XYLineAndShapeRenderer)plot.getRenderer();
-
         r.setSeriesPaint(0, ChartColor.LIGHT_GREEN);
         r.setSeriesPaint(1, ChartColor.GREEN);
         r.setSeriesPaint(2, ChartColor.DARK_GREEN);
@@ -98,6 +107,7 @@ public class ReadExcel{
         r.setSeriesShapesFilled(2, false);
 
         try {
+
             ChartUtilities.saveChartAsJPEG(new File("/home/nagui/Bureau/chart.jpg"), chart, 1000, 500);
         } catch (IOException e) {
             System.out.println("Problem in creating chart.");
