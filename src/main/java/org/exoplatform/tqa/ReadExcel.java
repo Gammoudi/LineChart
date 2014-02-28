@@ -26,6 +26,10 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 public class ReadExcel{
+
+    /**
+     * Method to read data from XLS file.
+     */
     public void readXlsFile(){
         short a=0;
         short b=1;
@@ -75,6 +79,14 @@ public class ReadExcel{
 
     }
 
+    /**
+     * Create Line chart with series collection.
+     * @param plf_old_data
+     * @param plf_new_data
+     * @param plf_one_sec
+     * @param plf_two_sec
+     * @param plf_three_sec
+     */
     private void CreateLineChart(XYSeries plf_old_data, XYSeries plf_new_data, XYSeries plf_one_sec, XYSeries plf_two_sec, XYSeries plf_three_sec) {
     /* Add all XYSeries to XYSeriesCollection */
         //XYSeriesCollection implements XYDataset
